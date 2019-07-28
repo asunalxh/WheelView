@@ -11,6 +11,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -61,6 +62,8 @@ public class WheelView extends View {
     private boolean isScroll = false;//是否滑动
 
     private boolean isRecyclable = false;//是否循环
+
+    private onSelectChangeListener changeListener = null;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -142,7 +145,7 @@ public class WheelView extends View {
 
 
     /**
-     *速度递减移动
+     * 速度递减移动
      *
      * @param speed 初始速度
      *              maxSpeed为初始最大速度
@@ -159,8 +162,9 @@ public class WheelView extends View {
 
 
     /**
-     *以相同速度移动固定距离
-     * @param dy 距离
+     * 以相同速度移动固定距离
+     *
+     * @param dy    距离
      * @param speed 速度
      */
     private void onSpeedMove(float dy, float speed) {
@@ -185,7 +189,6 @@ public class WheelView extends View {
     }
 
 
-    private float sumMove=0;
     /**
      * 控件移动一定距离
      *
@@ -213,8 +216,10 @@ public class WheelView extends View {
             if (item.getStartY() > (selectY - itemHeight / 2) && item.getStartY() <= (selectY + itemHeight / 2)) {
                 selectIndex = list.indexOf(item.getText());
                 onSpeedMove(selectY - item.getStartY(), 5);
-                return;
+                break;
             }
+        if (changeListener != null)
+            changeListener.onChange(selectIndex);
     }
 
 
@@ -249,11 +254,19 @@ public class WheelView extends View {
 
     public WheelView setMinSelect(int minSelect) {
         this.minSelect = minSelect;
+        if(selectIndex<minSelect) {
+            onMove(itemHeight * (selectIndex - minSelect));
+            selectIndex=minSelect;
+        }
         return this;
     }
 
     public WheelView setMaxSelect(int maxSelect) {
         this.maxSelect = maxSelect;
+        if(selectIndex>maxSelect) {
+            onMove(itemHeight * (maxSelect - selectIndex));
+            selectIndex = maxSelect;
+        }
         return this;
     }
 
@@ -316,6 +329,10 @@ public class WheelView extends View {
     public WheelView setIsRelcyclable(boolean b) {
         this.isRecyclable = b;
         return this;
+    }
+
+    public void setOnSelectChangeListener(onSelectChangeListener listener) {
+        this.changeListener = listener;
     }
 
     public WheelView(Context context) {
@@ -413,10 +430,10 @@ public class WheelView extends View {
 
         public void move(float dy) {
             //循环显示
-            if(isRecyclable) {
-                if (startY >= (list.size() - 2) * itemHeight-itemHeight/2)
+            if (isRecyclable) {
+                if (startY >= (list.size() - 2) * itemHeight - itemHeight / 2)
                     startY -= itemHeight * list.size();
-                else if (startY <= -(list.size() - showCount - 2) * itemHeight-itemHeight/2)
+                else if (startY <= -(list.size() - showCount - 2) * itemHeight - itemHeight / 2)
                     startY += itemHeight * list.size();
             }
             startY += dy;
@@ -440,7 +457,7 @@ public class WheelView extends View {
             float baseLine = rectF.centerY() - (metrics.top + metrics.bottom) / 2;
 
             //透明度与距离成反比（透明度范围0-255）
-            int alpha = (int) (255 -(showCount*10)* Math.abs(rectF.centerY()-(selectY+itemHeight/2))/itemHeight);
+            int alpha = (int) (255 - (showCount * 10) * Math.abs(rectF.centerY() - (selectY + itemHeight / 2)) / itemHeight);
             paint.setAlpha(alpha);
 
             //居中绘制
@@ -464,5 +481,9 @@ public class WheelView extends View {
             rectF.left = 0;
             rectF.right = viewWidth;
         }
+    }
+
+    public interface onSelectChangeListener {
+        void onChange(int index);
     }
 }
