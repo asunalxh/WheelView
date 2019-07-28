@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -26,5 +28,6 @@ public class MainActivity extends AppCompatActivity {
         viewHelper.setList(list,list,list);
         LinearLayout layout=findViewById(R.id.content);
         layout.addView(viewHelper.getView());
+
     }
 }

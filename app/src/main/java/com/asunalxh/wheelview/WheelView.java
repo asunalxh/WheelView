@@ -253,19 +253,21 @@ public class WheelView extends View {
     }
 
     public WheelView setMinSelect(int minSelect) {
-        this.minSelect = minSelect;
-        if(selectIndex<minSelect) {
-            onMove(itemHeight * (selectIndex - minSelect));
-            selectIndex=minSelect;
+        if(isScroll){
+            stopMove();
+        }
+        if(selectIndex<minSelect){
+            setSelect(minSelect);
         }
         return this;
     }
 
     public WheelView setMaxSelect(int maxSelect) {
         this.maxSelect = maxSelect;
+        if(isScroll)
+            stopMove();
         if(selectIndex>maxSelect) {
-            onMove(itemHeight * (maxSelect - selectIndex));
-            selectIndex = maxSelect;
+            setSelect(maxSelect);
         }
         return this;
     }
@@ -328,6 +330,20 @@ public class WheelView extends View {
 
     public WheelView setIsRelcyclable(boolean b) {
         this.isRecyclable = b;
+        return this;
+    }
+
+    public WheelView setItemHeight(int height){
+        this.itemHeight=itemHeight;
+        return this;
+    }
+
+    public WheelView setSelect(int selectIndex){
+        if(this.selectIndex!=selectIndex) {
+            onMove(itemHeight * (this.selectIndex - selectIndex));
+            reLocation();
+        }
+        this.selectIndex=selectIndex;
         return this;
     }
 
