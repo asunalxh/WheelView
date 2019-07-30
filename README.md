@@ -32,7 +32,7 @@
 
 设置选择框分割线颜色，设为0不显示，并返回当前对象
 
-### 8. WheelView setSelectLineHeight(float height) 
+### 8. WheelView setSelectLineHeight(float contentHeight)
 
 设置选择框分割线宽度，并返回当前对象
 

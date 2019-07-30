@@ -30,7 +30,7 @@ public class WheelView extends View {
 
     private List<WheelItem> wheelItems = new ArrayList<>();//控件列表
 
-    private int showCount = 3;//显示行数，只能为单数
+    private int showCount = 5;//显示行数，只能为单数
 
     private int viewWidth;
     private int viewHeight;
@@ -286,6 +286,10 @@ public class WheelView extends View {
         return list.get(selectIndex);
     }
 
+    public int getSelectIndex(){
+        return list.indexOf(getSelectString());
+    }
+
     public WheelView setSelectBackgroundColor(int color) {
         this.selectBackgroundColor = color;
         return this;
@@ -315,6 +319,16 @@ public class WheelView extends View {
         this.list = list;
         if (maxSelect == -1)
             maxSelect = list.size() - 1;
+        return this;
+    }
+
+    public WheelView setList(String[] list){
+        this.list=new ArrayList<>();
+        for(int i=0;i<list.length;i++)
+            this.list.add(list[i]);
+        Log.d("test:",String.valueOf(this.list.size()));
+        if (maxSelect == -1)
+            maxSelect = this.list.size() - 1;
         return this;
     }
 
