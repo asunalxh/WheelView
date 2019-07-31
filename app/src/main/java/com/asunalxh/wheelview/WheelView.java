@@ -11,7 +11,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -62,6 +61,7 @@ public class WheelView extends View {
     private boolean isScroll = false;//是否滑动
 
     private boolean isRecyclable = false;//是否循环
+    private boolean isInited=false;//是否已加载
 
     private onSelectChangeListener changeListener = null;
 
@@ -229,11 +229,10 @@ public class WheelView extends View {
     private void intiWheelItems() {
         wheelItems.clear();
         if (!isRecyclable) {
-            int select = Math.max(selectIndex, minSelect);
-            int min = (select - showCount / 2 - 1) >= 0 ? (select - showCount / 2 - 1) : 0;
+            selectIndex = Math.max(selectIndex, minSelect);
+            selectIndex=Math.min(selectIndex,maxSelect);
             for (int i = 0; i < list.size(); i++) {
-                int index = i + min;
-                wheelItems.add(new WheelItem(list.get(index), selectY + itemHeight * (index - select)));
+                wheelItems.add(new WheelItem(list.get(i), selectY + itemHeight * (i-selectIndex)));
             }
         } else {
             while (list.size() < showCount + 4) {
@@ -250,12 +249,14 @@ public class WheelView extends View {
                 wheelItems.add(new WheelItem(list.get(index), itemHeight * (i - 2)));
             }
         }
+        isInited=true;
     }
 
     public WheelView setMinSelect(int minSelect) {
         if(isScroll){
             stopMove();
         }
+        this.minSelect=minSelect;
         if(selectIndex<minSelect){
             setSelect(minSelect);
         }
@@ -266,6 +267,7 @@ public class WheelView extends View {
         this.maxSelect = maxSelect;
         if(isScroll)
             stopMove();
+        this.maxSelect=maxSelect;
         if(selectIndex>maxSelect) {
             setSelect(maxSelect);
         }
@@ -326,7 +328,6 @@ public class WheelView extends View {
         this.list=new ArrayList<>();
         for(int i=0;i<list.length;i++)
             this.list.add(list[i]);
-        Log.d("test:",String.valueOf(this.list.size()));
         if (maxSelect == -1)
             maxSelect = this.list.size() - 1;
         return this;
@@ -353,7 +354,7 @@ public class WheelView extends View {
     }
 
     public WheelView setSelect(int selectIndex){
-        if(this.selectIndex!=selectIndex) {
+        if(isInited&&this.selectIndex!=selectIndex) {
             onMove(itemHeight * (this.selectIndex - selectIndex));
             reLocation();
         }
@@ -399,8 +400,8 @@ public class WheelView extends View {
                     while (Math.abs(speed_fast) > 0) {
                         if (!isScroll)
                             break;
-                        else if (!isRecyclable && wheelItems.get(0).getStartY() >= selectY ||
-                                !isRecyclable && wheelItems.get(wheelItems.size() - 1).getStartY() <= selectY)
+                        else if (!isRecyclable && wheelItems.get(0).getStartY() >= selectY-minSelect*itemHeight ||
+                                !isRecyclable && wheelItems.get(0).getStartY() <= selectY-maxSelect*itemHeight)
                             break;
 
                         onMove(speed_fast);
