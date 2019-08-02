@@ -62,35 +62,38 @@ public class WheelView extends View {
 
     private boolean isRecyclable = false;//是否循环
     private boolean isInited=false;//是否已加载
+    private boolean isStaticSelect=false;
 
     private onSelectChangeListener changeListener = null;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (velocityTracker == null)
-            velocityTracker = VelocityTracker.obtain();
-        velocityTracker.addMovement(event);
+        if(isStaticSelect==false) {
+            if (velocityTracker == null)
+                velocityTracker = VelocityTracker.obtain();
+            velocityTracker.addMovement(event);
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (isScroll) {
-                    stopMove();
-                }
-                touchY = event.getY();
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                onMove(event.getY() - touchY);
-                touchY = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                velocityTracker.computeCurrentVelocity(10, maxSpeed);
-                float speed = velocityTracker.getYVelocity();
-                if (Math.abs(speed) > minSpeed)
-                    onFastMove(speed);
-                else reLocation();
-                velocityTracker.recycle();
-                velocityTracker = null;
-                break;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (isScroll) {
+                        stopMove();
+                    }
+                    touchY = event.getY();
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    onMove(event.getY() - touchY);
+                    touchY = event.getY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    velocityTracker.computeCurrentVelocity(10, maxSpeed);
+                    float speed = velocityTracker.getYVelocity();
+                    if (Math.abs(speed) > minSpeed)
+                        onFastMove(speed);
+                    else reLocation();
+                    velocityTracker.recycle();
+                    velocityTracker = null;
+                    break;
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -208,8 +211,16 @@ public class WheelView extends View {
         if (!isRecyclable) {
             if (wheelItems.get(0).getStartY() >= selectY - minSelect * itemHeight) {
                 onSpeedMove(selectY - minSelect * itemHeight - wheelItems.get(0).getStartY(), 20);
+                selectIndex=minSelect;
+                if (changeListener != null)
+                    changeListener.onChange(selectIndex);
+                return;
             } else if (wheelItems.get(0).getStartY() <= selectY - maxSelect * itemHeight) {
                 onSpeedMove(selectY - maxSelect * itemHeight - wheelItems.get(0).getStartY(), 20);
+                selectIndex=maxSelect;
+                if (changeListener != null)
+                    changeListener.onChange(selectIndex);
+                return;
             }
         }
         for (WheelItem item : wheelItems)
@@ -273,6 +284,12 @@ public class WheelView extends View {
         }
         return this;
     }
+
+    public WheelView setStaticSelect(boolean b){
+        isStaticSelect=b;
+        return this;
+    }
+
 
     public WheelView setSelectLineColor(int color) {
         this.selectLineColor = color;
@@ -513,6 +530,7 @@ public class WheelView extends View {
             rectF.right = viewWidth;
         }
     }
+
 
     public interface onSelectChangeListener {
         void onChange(int index);
