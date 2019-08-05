@@ -59,3 +59,29 @@
 ### 14. String getSelectString() 
 
 获得当前选择的内容
+
+
+
+## 如何使用
+
+1. 在根目录的build.grade添加
+
+   ```
+   allprojects {
+   		repositories {
+   			...
+   			maven { url 'https://jitpack.io' }
+   		}
+   	}
+   ```
+
+2. 添加依赖
+
+   ```
+   dependencies {
+   	        implementation 'com.github.asunalxh:wheelview:Tag'
+   	}
+   ```
+
+   
+
