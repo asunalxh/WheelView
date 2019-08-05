@@ -4,65 +4,88 @@
 
 ## Method
 
-### 1. WheelView setList(List<String> list)
+### 1. public WheelView setMinSelect(int minSelect) 
 
-设置显示的内容，并返回当前对象 
+设置最小可选择项
 
-### 2.  WheelView setTextSize(int textSize) 
+### 2. public WheelView setMaxSelect(int maxSelect) 
 
-设置字体大小，并返回当前对象
+设置最大可选择项目
 
-### 3.  WheelView setTextColor(int textColor) 
+### 3. public WheelView setStaticSelect(boolean b)
 
-设置字体颜色，并返回当前对象
+设置是否静止
 
-### 4.  WheelView setIsRecyclable(boolean b) 
+### 4. public WheelView setSelectLineColor(int color)
 
-设置是否循环滚动，并返回当前对象
+设置选择框分割线颜色
 
-### 5.  WheelView setShowCount(int showCount) 
+### 5. public WheelView setSelectLineHeight(float height) 
 
-设置显示个数，必须为奇数，并返回当前对象
+设置选择框分割线宽度
 
-### 6. WheelView setSelectBackgroundColor(int color) 
+### 6. public String getSelectString() 
 
-设置选择框背景颜色，设为0不显示，并返回当前对象
+获得选中的文字
 
-### 7. WheelView setSelectLineColor(int color) 
+### 7. public int getSelectIndex()
 
-设置选择框分割线颜色，设为0不显示，并返回当前对象
+获得选中索引
 
-### 8. WheelView setSelectLineHeight(float contentHeight)
+### 8. public WheelView setSelectBackgroundColor(int color) 
 
-设置选择框分割线宽度，并返回当前对象
+设置选中框背景颜色
 
-### 9. WheelView setMinSelect(int minSelect) 
+### 9. public WheelView setMinSpeed(float minSpeed)
 
-设置最小选择项，并返回当前对象
+设置快速滑动最小启动速度
 
-### 10. WheelView setMaxSelect(int maxSelect) 
+### 10. public WheelView setMaxSpeed(float maxSpeed)
 
-设置最大选择项，并返回当前对象
+设置快速滑动最大速度
 
-### 11. WheelView setMinSpeed(float minSpeed) 
+### 11. public WheelView setAcceleration(float acceleration) 
 
-设置快速滑动判定速度（/10ms），并返回当前对象
+设置快速滑动减速的加速度
 
-### 12.  WheelView setMaxSpeed(float maxSpeed) 
+### 12. public WheelView setShowCount(int showCount) 
 
-设置快速滑动最高速度（/10ms），并返回当前对象
+设置显示项数，必须为奇数
 
-### 13. WheelView setAcceleration(float acceleration) 
+### 13. public WheelView setList(List<String> list)
 
-设置快速滑动减速的加速度，并返回当前对象
+设置选择项目
 
-### 14. String getSelectString() 
+### 14. public WheelView setList(String[] list)
 
-获得当前选择的内容
+设置选择项目
+
+### 15. public WheelView setTextSize(int textSize) 
+
+设置文字大小
+
+### 16. public WheelView setTextColor(int textColor) 
+
+设置文字颜色
+
+### 17. public WheelView setIsRelcyclable(boolean b) 
+
+是否循环滑动
+
+### 18. public WheelView setItemHeight(int height)
+
+设置选项宽度，设置后整个控件高度根据选项宽度和显示数目决定
+
+### 19. public WheelView setSelect(int selectIndex)
+
+设置选中
+
+### 20. public void setOnSelectChangeListener(onSelectChangeListener listener) 
+
+设置当选择改变时的监听器
 
 
-
-## 如何使用
+## How To Use
 
 1. 在根目录的build.grade添加
 
