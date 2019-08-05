@@ -79,7 +79,7 @@
 
    ```
    dependencies {
-   	        implementation 'com.github.asunalxh:wheelview:Tag'
+   	        implementation 'com.github.asunalxh:wheelview:1.1'
    	}
    ```
 
